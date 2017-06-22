@@ -1,0 +1,37 @@
+<div class="row">
+    <div class="col-md-9">
+        <form method = "POST" action="">
+            <h2>Select Items for Invoice</h2><br>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th><i class="fa fa-check"></i></th>
+                    <th>#</th>
+                    <th><i class="fa fa-wrench"></i></th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each projectSteps}}
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;">
+                            <input type="checkbox" class="form-check-input" name="stepIds" value = "{{this.projectStepId}}" checked\>
+                        </td>
+                        <td>{{this.projectStepId}}</td>
+                        <td>{{{this.annotationHTML}}}</td>
+                        <td>{{this.text}}</td>
+                    </tr>
+                {{/each}}
+
+                </tbody>
+
+            </table>
+
+            <input type="submit" class="btn btn-success" style="float:right;" value="Create Invoice">
+        </form>
+    </div>
+    <div class="col-md-3">
+
+    </div>
+
+</div>

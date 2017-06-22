@@ -1,0 +1,69 @@
+<h3> Customers </h3>
+
+<div class="row">
+    <div class="col-md-9">
+        <!-- Customer Table -->
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{#each customerList}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.firstName}}</td>
+                <td>{{this.lastName}}</td>
+                <td>{{{this.address}}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+
+        </table>
+
+    </div>
+    <div class="col-md-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="modal" href="" data-target="#newCustomerModal">Create Customer</a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="newCustomerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create New Customer</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="/customers/create">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="firstNameInput" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="lastNameInput" placeholder="Last Name">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" placeholder="Address" name="addressInput" rows="3"></textarea>
+                    </div>
+                    <input class="btn btn-success btn-small" type="submit" value="Create">
+                    <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Dismiss</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

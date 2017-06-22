@@ -1,0 +1,27 @@
+<h3>Settings</h3>
+
+<form method="post" action="">
+    <div class="form-group">
+        <label for="ibanInput">IBAN</label>
+        <input type="text" class="form-control" id="ibanInput" name="ibanInput" placeholder="DE XX XXXX XXXX XXXX XXXX XX" value="{{teamData.iban}}">
+    </div>
+    <div class="form-group">
+        <label for="bicInput">BIC</label>
+        <input type="text" class="form-control" id="bicInput" name="bicInput" placeholder="XXXXXXXX" value="{{teamData.bic}}">
+    </div>
+    <div class="form-group">
+        <label for="taxNumberInput">Tax Number</label>
+        <input type="text" class="form-control" id="taxNumberInput" name="taxNumberInput" placeholder="XXX XXX XXX" value="{{teamData.taxNumber}}">
+    </div>
+    <div class="form-group">
+        <label for="addressInput">Address</label>
+        <textarea rows="4" class="form-control" id="addressInput" name="addressInput">{{teamData.addressBlock}}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="hourLoanInput">Hour Loan</label>
+        <input type="number" class="form-control" id="hourLoanInput" name="hourLoanInput" placeholder="69.00" value="{{teamData.hourLoan}}">
+    </div>
+    
+    <input type="submit" class="btn btn-success" value="Update Data">
+    
+</form>

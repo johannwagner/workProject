@@ -1,0 +1,61 @@
+
+<br><br>
+<p>{{{teamData.addressBlock}}}</p>
+
+<br>
+<p>{{projectData.firstName}} {{projectData.lastName}} <br>
+{{{projectData.address}}}</p>
+
+<b style="float: right">
+    Rechnungsnummer: C{{invoiceData.customerIdDisplay}}-R{{invoiceData.invoiceIdDisplay}}<br>
+    Kundennummer: C{{invoiceData.customerIdDisplay}} <br>
+    Steuernummer: {{teamData.taxNumber}}
+</b><br><br><br><br><br>
+
+<b style="float: right">{{todayDate}}</b><br>
+<b>Betreff: C{{invoiceData.customerIdDisplay}}-R{{invoiceData.invoiceIdDisplay}}</b>
+<br>
+<br>
+
+
+<table class="table table-sm">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Beschreibung</th>
+        <th>Menge</th>
+        <th>Preis / Menge</th>
+        <th>Gesamt</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each projectSteps}}
+        <tr>
+            <td>{{this.projectStepId}}</td>
+            <td>{{this.text}}</td>
+            <td>{{this.workHoursFormat}}</td>
+            <td>{{../teamData.hourLoan}} €</td>
+            <td>{{this.totalPrice}} €</td>
+        </tr>
+    {{/each}}
+    <tr>
+        <td></td>
+        <td><b>Gesamtsumme</b></td>
+        <td></td>
+        <td></td>
+        <td>{{projectData.totalPrice}} €</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>Das Lieferdatum entspricht dem Rechnungsdatum.</p>
+<p>Gemäß § 19 UStG enthält der Rechnungsbetrag keine Umsatzsteuer.</p>
+<p>
+    Bitte überweisen Sie den obenstehenden Betrag innerhalb der nächsten 10 Werktage auf folgendes Konto:
+    <br>IBAN: <b>{{teamData.iban}}</b>
+    <br>BIC: <b>{{teamData.bic}}</b>
+</p>
+<br>
+<p>Bei Rückfragen stehe ich natürlich zur Verfügung. <br> Vielen Dank für ihren Auftrag !</p>
+
+

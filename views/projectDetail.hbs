@@ -1,0 +1,93 @@
+<div>
+    <h3>Project Name: {{project.displayName}}</h3><br>
+
+    <h4>Tasks</h4>
+    <script type="text/javascript">
+        loadTable();
+    </script>
+    <div class="row">
+        <div class="col-md-9">
+            <div id="tableDiv" style="overflow-y: scroll; height: 450px;">
+
+            </div>
+        </div>
+        <div class="col-md-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" href="" data-target="#newProjectStep">Add Project Step</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/projects/{{project.projectId}}/createInvoice">Create Invoice</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="newProjectStep" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create a New Project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form class="form" action="*">
+                    <div class="form-group">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="annotationDropdown"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Annotation..
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                <button onclick="changeLabel('annotationDropdown', 'fa-plus', 'Added', 'annotationInput1', 1);"
+                                        class="dropdown-item" type="button"><i
+                                        style="width:16px; text-align: center; padding-right: 24px;"
+                                        class="fa fa-plus"></i>Added
+                                </button>
+                                <button onclick="changeLabel('annotationDropdown', 'fa-circle-o', 'Changed',  'annotationInput1', 2);"
+                                        class="dropdown-item" type="button"><i
+                                        style="width:16px; text-align: center; padding-right: 24px;"
+                                        class="fa fa-circle-o"></i>Changed
+                                </button>
+                                <button onclick="changeLabel('annotationDropdown', 'fa-remove','Removed',  'annotationInput1', 3);"
+                                        class="dropdown-item" type="button"><i
+                                        style="width:16px; text-align: center; padding-right: 24px;"
+                                        class="fa fa-remove"></i>Remove
+                                </button>
+                                <button onclick="changeLabel('annotationDropdown', 'fa-info', 'Information', 'annotationInput1', 4, 'timeInput1');"
+                                        class="dropdown-item" type="button"><i
+                                        style="width:16px; text-align: center; padding-right: 24px;"
+                                        class="fa fa-info"></i>Information
+                                </button>
+                            </div>
+                            <input type="hidden" id="annotationInput1" name="annotationInput" value="-1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <textarea class="form-control" id="taskDescription1" placeholder="Description"
+                                  rows="3"></textarea>
+
+
+                    </div>
+                    <div class="form-group">
+
+                        <input class="form-control" type="text" value="00:00" name="timeInput1" id="timeInput1">
+                    </div>
+                    <input type="button" class="btn btn-small btn-success" data-dismiss="modal" onclick="addValues(1, {{project.projectId}})"
+                           name="addButton"
+                           id="addButton"
+                           value="Add">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

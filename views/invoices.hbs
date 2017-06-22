@@ -1,0 +1,32 @@
+<h3> Invoices </h3>
+
+<div class="row">
+    <div class="col-md-9">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Invoice Number</th>
+                    <th>Project</th>
+                    <th><i class="fa fa-check"></i></th>
+                    <th><i class="fa fa-print"></i></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each invoiceList}}
+                <tr>
+                    <td><a href="/invoices/{{this.invoiceId}}" >{{this.invoiceId}}</a></td>
+                    <td>C{{this.customerIdDisplay}}-R{{this.invoiceIdDisplay}}</td>
+                    <td>{{this.displayName}}</td>
+                    <td><i class="fa fa-remove"></i></td>
+                    <td><a href="/invoices/{{this.invoiceId}}/printView"><i class="fa fa-print"></i></a></td>
+                </tr>
+                {{/each}}
+
+
+            </tbody>
+
+        </table>
+    </div>
+    <div class="col-md-3"></div>
+</div>

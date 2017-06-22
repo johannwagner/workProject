@@ -1,0 +1,4 @@
+.idea/*
+.sync/*
+node_modules
+secrets.js

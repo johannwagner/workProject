@@ -1,0 +1,69 @@
+<form method="POST" action="">
+    <div class="form-group row">
+        <label for="userNameInput" class="col-2 col-form-label">Username</label>
+        <div class="col-4">
+            <input class="form-control" type="text" value="" name="userNameInput" id="userNameInput">
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="passwordInput" class="col-2 col-form-label">Password</label>
+        <div class="col-4">
+            <input class="form-control" type="password" value="" name="passwordInput" id="passwordInput">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-success">Login</button>
+    <button type="button" class="btn btn-primary btn-warning" data-toggle="modal" data-target="#registerModal">
+        Register
+    </button>
+</form>
+<!-- Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="/register" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Register a New Account</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="userNameInput" class="col-2 col-form-label">Username</label>
+                        <div class="col-10">
+                            <input class="form-control" type="text" value="" name="userNameInput" id="userNameInput">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="teamNameInput" class="col-2 col-form-label">Team</label>
+                        <div class="col-10">
+                            <input class="form-control" type="text" value="" name="teamNameInput" id="teamNameInput">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="emailInput" class="col-2 col-form-label">E-Mail</label>
+                        <div class="col-10">
+                            <input class="form-control" type="email" value="" name="emailInput" id="emailInput">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="passwordInput" class="col-2 col-form-label">Password</label>
+                        <div class="col-10">
+                            <input class="form-control" type="password" value="" name="passwordInput"
+                                   id="passwordInput">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary btn-success" value="Create Account">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
