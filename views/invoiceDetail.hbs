@@ -13,7 +13,7 @@
 </b><br><br><br><br><br>
 
 <b style="float: right">{{todayDate}}</b><br>
-<b>Betreff: C{{invoiceData.customerIdDisplay}}-R{{invoiceData.invoiceIdDisplay}}</b>
+<b>Betreff: Rechnung - {{projectData.displayName}} - C{{invoiceData.customerIdDisplay}}-R{{invoiceData.invoiceIdDisplay}}</b>
 <br>
 <br>
 
@@ -28,10 +28,10 @@
         <th>Gesamt</th>
     </tr>
     </thead>
-    <tbody>
+
     {{#each projectSteps}}
         <tr>
-            <td>{{this.projectStepId}}</td>
+            <td>{{this.displayId}}</td>
             <td>{{this.text}}</td>
             <td>{{this.workHoursFormat}}</td>
             <td>{{../teamData.hourLoan}} €</td>

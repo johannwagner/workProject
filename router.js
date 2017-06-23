@@ -39,13 +39,23 @@ let generateStandardValues = (req, res, valueDict) => {
         req.session.messages = [];
     }
 
+    valueDict.helpers = {
+        inc: (value, options) => {
+            console.log("hi");
+            return parseInt(value) + 1;
+        },
+        meh: (value, options) => {
+            return "Mööh!";
+        }
+    };
+
     return valueDict;
 };
 
 router.get('*', noCache);
 
 router.get('/', ensureLogin, (req, res, next) => {
-    res.render('index', generateStandardValues(req, res, {userName: req.session.user.name}));
+    res.render('index.hbs', generateStandardValues(req, res, {userName: req.session.user.name}));
 });
 
 router.get('/customers', ensureLogin, (req, res, next) => {
@@ -58,7 +68,7 @@ router.get('/customers', ensureLogin, (req, res, next) => {
             customer.address = String(customer.address).replace('\n', '<br>');
         });
 
-        res.render('customers', generateStandardValues(req, res, {customerList: customerList}));
+        res.render('customers.hbs', generateStandardValues(req, res, {customerList: customerList}));
 
     }).catch((error) => {
         console.error(error);
@@ -74,7 +84,7 @@ router.get('/invoices', ensureLogin, (req, res, next) => {
     dataGenerator.getInvoiceData(teamId).then((invoiceList) => {
 
 
-        res.render('invoices', generateStandardValues(req, res, {invoiceList: invoiceList}));
+        res.render('invoices.hbs', generateStandardValues(req, res, {invoiceList: invoiceList}));
 
     }).error((error) => {
         console.log(error);
@@ -100,7 +110,7 @@ router.get('/invoices/:id/:printView?', ensureLogin, (req, res, next) => {
 
         let projectDataPromise = dataGenerator.getProjectData(teamId, invoiceDataElem.projectId);
         let projectDetailDataPromise = dataGenerator.getProjectDetailData(teamId, null, invoiceId);
-        let teamPromise = dataGenerator.getTeamData(teamId);
+        let teamPromise = dataGenerator.getTeamData(teamId, invoiceDataElem.createDate);
 
         return Promise.all([projectDataPromise, projectDetailDataPromise, teamPromise])
     }).then((promiseData) => {
@@ -110,8 +120,15 @@ router.get('/invoices/:id/:printView?', ensureLogin, (req, res, next) => {
         let teamData = promiseData[2][0];
 
         projectDetailData = _.filter(projectDetailData, (step) => step.annotationId != 4);
+        let displayId = 1;
+        _.forEach(projectDetailData, (pdd) => {
+            pdd.displayId = 1;
+            displayId++;
+        });
+
+
         dataGenerator.generateFullInvoiceData(projectData, teamData, projectDetailData);
-        let date = new Date();
+        let date = invoiceDataElem.createDate;
         let todayDate = date.getDate() + "." + date.getMonth() + "." + date.getFullYear();
 
         let transferData = {
@@ -126,7 +143,7 @@ router.get('/invoices/:id/:printView?', ensureLogin, (req, res, next) => {
             transferData.layout = 'layoutPrint';
         }
 
-        res.render('invoiceDetail', generateStandardValues(req, res, transferData));
+        res.render('invoiceDetail.hbs', generateStandardValues(req, res, transferData));
 
     }).error((error) => {
         console.error(error);
@@ -143,7 +160,7 @@ router.get('/projects', ensureLogin, (req, res, next) => {
     let customerPromise = dataGenerator.getCustomerData(teamId);
 
     Promise.join(projectPromise, customerPromise, (projectData, customerData) => {
-        res.render('projects', generateStandardValues(req, res, {
+        res.render('projects.hbs', generateStandardValues(req, res, {
             projectData: projectData,
             customerData: customerData
         }));
@@ -164,7 +181,7 @@ router.get('/projects/:id', ensureLogin, (req, res, next) => {
             return;
         }
 
-        res.render('projectDetail', generateStandardValues(req, res, {project: data[0]}))
+        res.render('projectDetail.hbs', generateStandardValues(req, res, {project: data[0]}))
 
     });
 
@@ -182,7 +199,7 @@ router.get('/projects/:id/createInvoice', ensureLogin, (req, res, next) => {
     Promise.join(projectPromise, projectDetailPromise, (project, projectSteps) => {
         projectSteps = _.filter(projectSteps, (projectStep) => projectStep.invoiceId === null);
 
-        res.render('projectInvoice', generateStandardValues(req, res, {
+        res.render('projectInvoice.hbs', generateStandardValues(req, res, {
             project: project[0],
             projectSteps: projectSteps
         }));
@@ -190,7 +207,7 @@ router.get('/projects/:id/createInvoice', ensureLogin, (req, res, next) => {
 });
 
 router.get('/login/', (req, res, next) => {
-    res.render('login', generateStandardValues(req, res, {}));
+    res.render('login.hbs', generateStandardValues(req, res, {}));
 });
 
 router.post('/projects/create', ensureLogin, (req, res, next) => {
@@ -241,10 +258,11 @@ router.get('/settings', ensureLogin, (req, res, next) => {
 
         teamData = teamData[0];
 
-        teamData.hourLoan = teamData.hourLoan.toFixed(2);
+        if (teamData.hourLoan)
+            teamData.hourLoan = teamData.hourLoan.toFixed(2);
 
 
-        res.render('settings', generateStandardValues(req, res, {teamData: teamData}));
+        res.render('settings.hbs', generateStandardValues(req, res, {teamData: teamData}));
     });
 
 });

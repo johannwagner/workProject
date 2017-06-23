@@ -54,8 +54,8 @@ class DataGenerator {
         });
     }
 
-    getTeamData(teamId) {
-        return this.databaseAdapter.getTeamData(teamId);
+    getTeamData(teamId, timeStamp) {
+        return this.databaseAdapter.getTeamData(teamId, timeStamp);
     }
 
     generateFullInvoiceData(projectData, teamData, projectDetailData) {

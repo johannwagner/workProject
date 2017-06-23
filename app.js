@@ -1,17 +1,23 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+//const hbs = require('handlebars');
+const exphbs = require('express-handlebars');
+const router = require('./router');
 app = express();
 
-let router = require('./router');
+let hbs = exphbs.create({
+    // Specify helpers which are only registered on this instance.
+    views:  path.join(__dirname, 'views'),
+    defaultLayout: 'layout',
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+});
+
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -31,7 +37,7 @@ app.use(router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -44,7 +50,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error.hbs');
 });
 
 app.listen(4200);

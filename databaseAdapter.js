@@ -4,9 +4,10 @@
 
 const mysql = require('promise-mysql');
 const _ = require('lodash');
+const Secrets = require('./secrets.js');
 
 const WhereConnector = {
-    "AND" : 1,
+    "AND": 1,
     "OR": 2
 };
 
@@ -18,13 +19,13 @@ class WhereGenerator {
         this.whereConnector = whereConnector;
     }
 
-    insertClause(insertKey, insertValue){
+    insertClause(insertKey, insertValue) {
 
-        if(!insertValue) {
+        if (!insertValue) {
             return;
         }
 
-        if(!this.firstItem) {
+        if (!this.firstItem) {
             this.whereString += " " + _.findKey(WhereConnector, (value) => value === this.whereConnector) + " ";
         } else {
             this.firstItem = false;
@@ -43,9 +44,7 @@ class WhereGenerator {
 class DatabaseAdapter {
 
 
-
     constructor() {
-
 
 
         this.pool = mysql.createPool(Secrets.PoolConfiguration);
@@ -74,8 +73,12 @@ class DatabaseAdapter {
 
     createUser(userValues, teamValues) {
 
+        let teamId = -1;
         return this.pool.query('INSERT INTO teams (displayName) VALUES (?)', [teamValues.displayName]).then((result) => {
-            return this.pool.query('INSERT INTO users (name, mailAddress, passwordHash, passwordSalt, teamId) VALUES (?,?,?,?,?);', [userValues.name, userValues.mailAddress, userValues.passwordHash, userValues.passwordSalt, result.insertId]);
+            teamId = result.insertId;
+            return this.pool.query('INSERT INTO users (name, mailAddress, passwordHash, passwordSalt, teamId) VALUES (?,?,?,?,?);', [userValues.name, userValues.mailAddress, userValues.passwordHash, userValues.passwordSalt, teamId]);
+        }).then((result) => {
+            return this.pool.query('INSERT INTO teamSettings (teamId) VALUES (?)', [teamId]);
         });
     }
 
@@ -111,7 +114,7 @@ class DatabaseAdapter {
     }
 
     createCustomer(customerData) {
-        return this.pool.query('INSERT INTO customers (fiprstName, lastName, address, teamId) VALUES (?,?,?,?);', [customerData.firstName, customerData.lastName, customerData.address, customerData.teamId])
+        return this.pool.query('INSERT INTO customers (firstName, lastName, address, teamId) VALUES (?,?,?,?);', [customerData.firstName, customerData.lastName, customerData.address, customerData.teamId])
     }
 
     setInvoiceIdForProjectStep(projectStepId, invoiceId) {
@@ -119,7 +122,7 @@ class DatabaseAdapter {
     }
 
     createInvoice(projectId) {
-        return this.pool.query('INSERT INTO invoices (projectId, iban, bic, taxNumber, hourLoan) VALUES (?, "", "", "", "")', [projectId]);
+        return this.pool.query('INSERT INTO invoices (projectId) VALUES (?)', [projectId]);
     }
 
     getInvoiceData(teamId, invoiceId) {
@@ -134,12 +137,19 @@ class DatabaseAdapter {
         return this.pool.query('SELECT i.id AS invoiceId, p.id AS projectId, i.*, p.* FROM invoices i LEFT JOIN projects p ON i.projectId = p.id' + whereGenerator.toString());
     }
 
-    getTeamData(teamId) {
-        return this.pool.query('SELECT * FROM teams WHERE id = ?', [teamId]);
+    getTeamData(teamId, timeStamp) {
+        if (timeStamp) {
+            return this.pool.query('SELECT * FROM teamSettings WHERE teamId = ? AND createDate < ? AND (endDate IS NULL OR ? < endDate)', [teamId, timeStamp, timeStamp]);
+        } else {
+            return this.pool.query('SELECT * FROM teamSettings WHERE id = (SELECT max(id) FROM teamSettings WHERE teamId = ?)', [teamId]);
+        }
     }
 
     updateTeamData(teamId, updateData) {
-        return this.pool.query('UPDATE teams SET iban=?, bic=?, addressBlock=?, hourLoan=?, taxNumber=? WHERE id = ?', [updateData.iban, updateData.bic, updateData.addressBlock, updateData.hourLoan, updateData.taxNumber, teamId]);
+        return this.pool.query('UPDATE teamSettings SET endDate = CURRENT_TIMESTAMP WHERE id IN (SELECT max(id) FROM (SELECT id FROM teamSettings WHERE teamId = ?) AS abitaryTableName)', [teamId]).then((result) => {
+            return this.pool.query('INSERT INTO teamSettings (iban, bic, addressBlock, hourLoan, taxNumber, teamId) VALUES (?,?,?,?,?,?)', [updateData.iban, updateData.bic, updateData.addressBlock, updateData.hourLoan, updateData.taxNumber, teamId]);
+        });
+
     }
 }
 
