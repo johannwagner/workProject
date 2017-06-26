@@ -64,17 +64,53 @@ class DataGenerator {
         teamData.hourLoan = teamData.hourLoan.toFixed(2);
         projectData.totalPrice = 0;
 
+        let groupIds = [];
+
         _.forEach(projectDetailData, (pStep) => {
             let splitWorkHours = pStep.workHours.split(':');
             let hours = Number(splitWorkHours[0]);
             let minutes = Number(splitWorkHours[1]);
 
             pStep.workHoursFormat = (hours + (minutes / 60)).toFixed(2);
-            pStep.totalPrice = (pStep.workHoursFormat * teamData.hourLoan).toFixed(2);
-            projectData.totalPrice += Number(pStep.totalPrice);
+            if (pStep.projectGroupFixedPrice) {
+                pStep.projectGroupFixedPrice = pStep.projectGroupFixedPrice.toFixed(2);
+
+                if(!groupIds.includes(pStep.projectGroupId)) {
+                    projectData.totalPrice += Number(pStep.projectGroupFixedPrice);
+                    groupIds.push(pStep.projectGroupId);
+                }
+
+            } else {
+                pStep.totalPrice = (pStep.workHoursFormat * teamData.hourLoan).toFixed(2);
+                projectData.totalPrice += Number(pStep.totalPrice);
+            }
         });
 
         projectData.totalPrice = projectData.totalPrice.toFixed(2);
+    }
+
+    generateDisplayInvoiceData(projectDetailData) {
+        let displayRows = [];
+
+        _.forEach(projectDetailData, (pStep) => {
+            if (!pStep.projectGroupId) {
+                pStep.projectGroupName = "Sonstiges";
+                pStep.projectGroupId = 0;
+            }
+
+            if (displayRows[pStep.projectGroupId]) {
+                displayRows[pStep.projectGroupId].projectSteps.push(pStep);
+            } else {
+                displayRows[pStep.projectGroupId] = {
+                    projectGroupName: pStep.projectGroupName,
+                    projectGroupDescription: pStep.projectGroupDescription,
+                    projectGroupFixedPrice: pStep.projectGroupFixedPrice,
+                    projectSteps: [pStep]
+                };
+            }
+        });
+
+        return displayRows;
     }
 }
 

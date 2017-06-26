@@ -17,6 +17,9 @@
                     <a class="nav-link" data-toggle="modal" href="" data-target="#newProjectStep">Add Project Step</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" data-toggle="modal" href="" data-target="#newProjectGroup">Add Project Group</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/projects/{{project.projectId}}/createInvoice">Create Invoice</a>
                 </li>
 
@@ -25,6 +28,42 @@
     </div>
 
 </div>
+
+
+<div class="modal fade" id="newProjectGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create a Group of Project Steps</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="/projects/{{project.projectId}}/createProjectGroup">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="titleInput" name="titleInput" placeholder="Title">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Description</label>
+                        <textarea rows="3" class="form-control" id="descriptionInput" name="descriptionInput"
+                                  placeholder="Title"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Fixed Price</label>
+                        <input type="text" class="form-control" id="fixedPriceInput" name="fixedPriceInput"
+                               placeholder="Price">
+                    </div>
+                    <input type="submit" class="btn btn-success" value="Create">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="newProjectStep" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -78,10 +117,10 @@
 
                     </div>
                     <div class="form-group">
-
                         <input class="form-control" type="text" value="00:00" name="timeInput1" id="timeInput1">
                     </div>
-                    <input type="button" class="btn btn-small btn-success" data-dismiss="modal" onclick="addValues(1, {{project.projectId}})"
+                    <input type="button" class="btn btn-small btn-success" data-dismiss="modal"
+                           onclick="addValues(1, {{project.projectId}})"
                            name="addButton"
                            id="addButton"
                            value="Add">

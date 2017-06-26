@@ -33,21 +33,18 @@ let ensureLogin = function (req, res, next) {
 
 let generateStandardValues = (req, res, valueDict) => {
 
+
+    valueDict.hasSession = !!req.session.user;
+
     if (req.session.user) {
+        valueDict.sessionUser = req.session.user.name;
+        valueDict.sessionTeam = req.session.user.displayName;
+
         // User is logged in.
         valueDict.messages = req.session.messages;
         req.session.messages = [];
     }
 
-    valueDict.helpers = {
-        inc: (value, options) => {
-            console.log("hi");
-            return parseInt(value) + 1;
-        },
-        meh: (value, options) => {
-            return "Mööh!";
-        }
-    };
 
     return valueDict;
 };
@@ -120,22 +117,31 @@ router.get('/invoices/:id/:printView?', ensureLogin, (req, res, next) => {
         let teamData = promiseData[2][0];
 
         projectDetailData = _.filter(projectDetailData, (step) => step.annotationId != 4);
-        let displayId = 1;
-        _.forEach(projectDetailData, (pdd) => {
-            pdd.displayId = 1;
-            displayId++;
-        });
+
 
 
         dataGenerator.generateFullInvoiceData(projectData, teamData, projectDetailData);
+
+        let projectGroups = dataGenerator.generateDisplayInvoiceData(projectDetailData);
         let date = invoiceDataElem.createDate;
         let todayDate = date.getDate() + "." + date.getMonth() + "." + date.getFullYear();
+
+
+        let displayId = 1;
+        _.forEach(projectGroups, (pg) => {
+            _.forEach(pg.projectSteps, (pdd) => {
+                pdd.displayId = displayId;
+                displayId++;
+            });
+        });
+
 
         let transferData = {
             todayDate: todayDate,
             invoiceData: invoiceDataElem,
             projectData: projectData,
             projectSteps: projectDetailData,
+            projectGroups: projectGroups,
             teamData: teamData
         };
 
@@ -186,6 +192,7 @@ router.get('/projects/:id', ensureLogin, (req, res, next) => {
     });
 
 });
+
 
 router.get('/projects/:id/createInvoice', ensureLogin, (req, res, next) => {
 
@@ -286,6 +293,26 @@ router.post('/settings', ensureLogin, (req, res, next) => {
         res.redirect('/settings');
     });
 });
+
+router.post('/projects/:id/createProjectGroup', ensureLogin, (req, res, next) => {
+
+    let projectGroupData = {
+        projectId: req.params.id,
+        title: req.body.titleInput,
+        description: req.body.descriptionInput,
+        fixedPrice: req.body.fixedPriceInput
+    };
+
+    databaseAdapter.createProjectGroup(projectGroupData).then((result) => {
+        messageHelper.userMessage(req, "Success!", "Project Group was created.");
+        res.redirect('/projects/' + req.params.id);
+    }).catch((error) => {
+        messageHelper.errorMessage(req, "Error!", "Project Group could not be created.", error);
+        res.redirect('/projects/' + req.params.id);
+    });
+
+})
+;
 
 router.post('/projects/:id/createInvoice', ensureLogin, (req, res, next) => {
     let teamId = req.session.user.teamId;

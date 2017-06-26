@@ -52,16 +52,12 @@ class DatabaseAdapter {
 
     getUser(id, userName) {
 
-        let queryPromise;
-        if (id) {
-            let sql = "SELECT * FROM users WHERE `id`=?";
-            queryPromise = this.pool.query(sql, [id]);
-        } else if (userName) {
-            let sql = "SELECT * FROM users WHERE `name`=?";
-            queryPromise = this.pool.query(sql, [userName]);
-        } else {
-            throw new Error('Invalid Arguments used.')
-        }
+        let whereGenerator = new WhereGenerator(this.pool, WhereConnector.AND);
+
+        whereGenerator.insertClause('id', id);
+        whereGenerator.insertClause('name', userName);
+
+        let queryPromise = this.pool.query('SELECT * FROM users LEFT JOIN teams ON teams.id = users.teamId' + whereGenerator.toString());
 
         return queryPromise.then((result) => {
             return result;
@@ -106,11 +102,11 @@ class DatabaseAdapter {
 
         let whereGenerator = new WhereGenerator(this.pool, WhereConnector.AND);
         whereGenerator.insertClause('invoiceId', invoiceId);
-        whereGenerator.insertClause('projectId', projectId);
+        whereGenerator.insertClause('p.projectId', projectId);
 
         console.log("detailData: " + whereGenerator.toString());
 
-        return this.pool.query('SELECT p.id as projectStepId, p.*, u.* FROM projectSteps p LEFT JOIN users u ON p.userId = u.id ' + whereGenerator.toString());
+        return this.pool.query('SELECT p.id as projectStepId, p.*, u.*, g.id as projectGroupId, g.fixedPrice AS projectGroupFixedPrice , g.title AS projectGroupName, g.description AS projectGroupDescription FROM projectSteps p LEFT JOIN users u ON p.userId = u.id LEFT JOIN projectGroups g ON p.projectGroupId = g.id ' + whereGenerator.toString());
     }
 
     createCustomer(customerData) {
@@ -150,6 +146,10 @@ class DatabaseAdapter {
             return this.pool.query('INSERT INTO teamSettings (iban, bic, addressBlock, hourLoan, taxNumber, teamId) VALUES (?,?,?,?,?,?)', [updateData.iban, updateData.bic, updateData.addressBlock, updateData.hourLoan, updateData.taxNumber, teamId]);
         });
 
+    }
+
+    createProjectGroup(pgd) {
+        return this.pool.query('INSERT INTO projectGroups (projectId, fixedPrice, title, description) VALUES (?,?,?,?)', [pgd.projectId, pgd.fixedPrice, pgd.title, pgd.description]);
     }
 }
 

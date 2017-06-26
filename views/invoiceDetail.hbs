@@ -20,8 +20,8 @@
 
 <table class="table table-sm">
     <thead>
-    <tr>
-        <th>#</th>
+    <tr style="background-color: #d3d3d3 !important;">
+
         <th>Beschreibung</th>
         <th>Menge</th>
         <th>Preis / Menge</th>
@@ -29,25 +29,45 @@
     </tr>
     </thead>
 
-    {{#each projectSteps}}
-        <tr>
-            <td>{{this.displayId}}</td>
-            <td>{{this.text}}</td>
-            <td>{{this.workHoursFormat}}</td>
-            <td>{{../teamData.hourLoan}} €</td>
-            <td>{{this.totalPrice}} €</td>
+    {{#each projectGroups}}
+        <tr style="background-color: #e9e9e9 !important;">
+
+            <td ><strong>{{this.projectGroupName}}</strong>{{#if this.projectGroupDescription}}:<br>{{this.projectGroupDescription}}{{/if}}</td>
+            <td></td>
+            <td></td>
+            <td>{{#if this.projectGroupFixedPrice}}{{this.projectGroupFixedPrice}} €{{/if}}</td>
         </tr>
+        {{#each this.projectSteps}}
+            <tr>
+
+                <td><strong>{{this.displayId}}</strong> - {{this.text}}</td>
+                {{#unless this.projectGroupFixedPrice}}
+                    <td>{{this.workHoursFormat}}</td>
+                    <td>{{../../teamData.hourLoan}} €</td>
+                    <td>{{this.totalPrice}} €</td>
+                {{else}}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                {{/unless}}
+
+            </tr>
+        {{/each}}
+
     {{/each}}
+
+    <tr ></tr>
     <tr>
+
+        <td><br><b>Gesamtsumme</b></td>
         <td></td>
-        <td><b>Gesamtsumme</b></td>
         <td></td>
-        <td></td>
-        <td>{{projectData.totalPrice}} €</td>
+        <td><br>{{projectData.totalPrice}} €</td>
     </tr>
     </tbody>
 </table>
 
+<br><br>
 <p>Das Lieferdatum entspricht dem Rechnungsdatum.</p>
 <p>Gemäß § 19 UStG enthält der Rechnungsbetrag keine Umsatzsteuer.</p>
 <p>

@@ -37,7 +37,7 @@ function loadTable() {
         htmlBuilder.push('<table class="table table-sm">');
 
         // Header
-        htmlBuilder.push('<thead> <tr> <th>#</th> <th> <i class="fa fa-wrench"></i></th> <th>Description</th> <th>Duration</th> <th>Worker</th> <th><i class="fa fa-money"></th></tr> </thead>');
+        htmlBuilder.push('<thead> <tr> <th>#</th> <th> <i class="fa fa-wrench"></i></th> <th>Description</th> <th>Duration</th> <th>Worker</th> <th>Project Group</th> <th><i class="fa fa-money"></th></tr> </thead>');
 
         // Body
         htmlBuilder.push('<tbody>');
@@ -58,6 +58,7 @@ function loadTable() {
             htmlBuilder.push('<td> ' + textFormat + ' </td>');
             htmlBuilder.push('<td> ' + (annotationId !== 4 ? project['workHours'] : "") + ' </td>');
             htmlBuilder.push('<td> ' + project['name'] + ' </td>');
+            htmlBuilder.push('<td> ' + project['projectGroupName'] + ' </td>');
             htmlBuilder.push('<td> ' + (project['invoiceId'] ? '<i class="fa fa-check"></i>' : '<i class="fa fa-remove"></i>') + ' </td>');
 
             htmlBuilder.push('</tr>');
@@ -70,6 +71,15 @@ function loadTable() {
 
         let htmlString = htmlBuilder.join('\n');
         document.getElementById('tableDiv').innerHTML = htmlString;
+
+        /**
+        let optionsString = "";
+        for (let project in projects) {
+             optionsString += "<option value='" + project.projectId + "'>" + project.displayName + "</option>"
+        }
+
+        document.getElementById('companySelection').innerHTML = optionsString;
+         */
     };
 
     let error = (xhr, error) => {

@@ -24,10 +24,20 @@
     <title>{{title}}</title>
 </head>
 <body>
+
 <div class="container">
+    <div class="row" style="margin: 2em 0; width: 100%;">
+        <div class="card" style="width:100%;">
+            <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+            <div class="card-block" style="text-align: center;">
+                <h2>SmartDonutProducent</h2>
+                {{#if hasSession}} User: {{sessionUser}} - Team: {{sessionTeam}}{{/if}}
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-3">
-            <ul class="nav flex-column" style="padding-top: 5em">
+            <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link" href="/">Dashboard</a>
                 </li>
@@ -45,7 +55,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-sm-9" style="padding-top: 5em">
+        <div class="col-sm-9">
                 {{# each messages}}
                     <div class="alert {{this.alertParam}}" role="alert">
                         <strong>{{this.header}}</strong> {{this.body}}
