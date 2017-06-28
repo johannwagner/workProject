@@ -39,8 +39,19 @@
         </tr>
         {{#each this.projectSteps}}
             <tr>
+                <td>
+                    <div class="row row-print">
+                        <div class="col-print-1">
+                            <strong>{{this.displayId}}</strong>
+                        </div>
+                        <div class="col-print-1">
+                            {{{this.annotationHTML}}}
+                        </div>
+                        <div class="col-print-10">
+                            {{this.text}}
+                        </div>
+                    </div>
 
-                <td><strong>{{this.displayId}}</strong> - {{this.text}}</td>
                 {{#unless this.projectGroupFixedPrice}}
                     <td>{{this.workHoursFormat}}</td>
                     <td>{{../../teamData.hourLoan}} €</td>
