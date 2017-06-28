@@ -11,3 +11,12 @@
 .col-print-11{width:92%; float:left; margin: 0;}
 .col-print-12{width:100%; float:left; margin: 0;}
 .row-print {margin:0;}
+
+@media print {
+    .groupedTable thead .groupedTableHead {
+        background-color: #858585 !important;
+    }
+    .groupedTable tbody .groupedTableHead {
+        background-color: #e9e9e9 !important;
+    }
+}
