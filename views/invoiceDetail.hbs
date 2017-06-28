@@ -18,9 +18,9 @@
 <br>
 
 
-<table class="table table-sm">
+<table class="table table-sm groupedTable">
     <thead>
-    <tr style="background-color: #d3d3d3 !important;">
+    <tr class="groupedTableHead">
 
         <th>Beschreibung</th>
         <th>Menge</th>
@@ -30,7 +30,7 @@
     </thead>
 
     {{#each projectGroups}}
-        <tr style="background-color: #e9e9e9 !important;">
+        <tr class="groupedTableHead">
 
             <td ><strong>{{this.projectGroupName}}</strong>{{#if this.projectGroupDescription}}:<br>{{this.projectGroupDescription}}{{/if}}</td>
             <td></td>
