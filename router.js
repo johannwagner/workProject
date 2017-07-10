@@ -254,8 +254,14 @@ router.get('/projects/:id/table/', ensureLogin, (req, res, next) => {
 
         project = _.reverse(project);
 
+
+        let returnValue = {
+            projects: project,
+            projectGroups: {'bla'}
+        };
+
         res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(project));
+        res.send(JSON.stringify(returnValue));
     });
 });
 

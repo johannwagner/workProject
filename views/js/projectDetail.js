@@ -20,6 +20,14 @@ function changeLabel(headerName, fontAwesomeTag, endTag, inputSelect, selectedVa
 
 }
 
+function onLoad() {
+    $(function () {
+        $('[data-toggle="popover"]').popover({
+            trigger: 'focus'
+        })
+    })
+
+}
 
 function loadTable() {
 
@@ -30,7 +38,27 @@ function loadTable() {
         4: '<i class="fa fa-info"></i>'
     };
 
-    let success = (projects) => {
+    let success = (jsonData) => {
+        // Generate Project Groups
+
+        let projects = jsonData.projects;
+        let projectGroups = jsonData.projectGroups;
+
+        let projectGroupsBuilder = [];
+
+        projectGroupsBuilder.push('<div class="dropdown-menu">');
+
+        for(let index in projectGroups){
+            let pG = projectGroups[index];
+            projectGroupsBuilder.push('<a class="dropdown-item" href="#">Action</a>')
+
+        }
+
+        projectGroupsBuilder.push('</div>');
+
+        let projectGroupString = projectGroupsBuilder.join(' ');
+
+
         let htmlBuilder = [];
 
         // Table
@@ -58,7 +86,7 @@ function loadTable() {
             htmlBuilder.push('<td> ' + textFormat + ' </td>');
             htmlBuilder.push('<td> ' + (annotationId !== 4 ? project['workHours'] : "") + ' </td>');
             htmlBuilder.push('<td> ' + project['name'] + ' </td>');
-            htmlBuilder.push('<td> ' + project['projectGroupName'] + ' </td>');
+            htmlBuilder.push('<td><div class="btn-group"> <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+ project['projectGroupName'] +'</button>' + projectGroupString + '</div></td>');
             htmlBuilder.push('<td> ' + (project['invoiceId'] ? '<i class="fa fa-check"></i>' : '<i class="fa fa-remove"></i>') + ' </td>');
 
             htmlBuilder.push('</tr>');

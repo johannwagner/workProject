@@ -14,9 +14,16 @@
 
 @media print {
     .groupedTable thead .groupedTableHead {
-        background-color: #858585 !important;
+        background-color: #B6B6B6 !important;
     }
     .groupedTable tbody .groupedTableHead {
         background-color: #e9e9e9 !important;
     }
+}
+
+.groupedTable thead .groupedTableHead {
+    background-color: #B6B6B6 !important;
+}
+.groupedTable tbody .groupedTableHead {
+    background-color: #e9e9e9 !important;
 }
